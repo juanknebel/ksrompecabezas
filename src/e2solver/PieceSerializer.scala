@@ -6,8 +6,8 @@ object PieceSerializer {
 	
 	def writer(pieces: Array[Piece]) : String = 
 		pieces.map(x => x.left + "," + x.up + "," + x.right + "," + x.down )
-		.mkString("","",";");
+		.mkString("",";",";");
 	
 	private def createPiece(parts: Array[String]) : Piece = 
-		new Piece(parts(0), parts(1),parts(2),parts(3));
+		new Piece(parts(0)(0), parts(1)(0),parts(2)(0),parts(3)(0));
 }

@@ -1,12 +1,12 @@
 package e2solver
 
-class Piece(var l: String,var u: String, var r: String,var d: String){
+class Piece(var l: Char,var u: Char, var r: Char,var d: Char){
 	def up = u;
 	def right = r;
 	def down = d;
 	def left = l;
 	
-	def rotate {
+	def rotate : Piece =  {
 		val auxLeft = left;
 		val auxUp = up;
 		val auxRight = right;
@@ -14,6 +14,8 @@ class Piece(var l: String,var u: String, var r: String,var d: String){
 		l = auxDown;
 		u = auxLeft;
 		r = auxUp;
-		d = auxDown;
+		d = auxRight;
+		
+		this;
 	}
 }

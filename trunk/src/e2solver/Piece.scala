@@ -18,4 +18,8 @@ class Piece(var l: Char,var u: Char, var r: Char,var d: Char){
 		
 		this;
 	}
+	
+	override def clone : Piece = {
+		new Piece(left,up,right,down)
+	}
 }

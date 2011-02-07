@@ -2,15 +2,17 @@ package e2solver
 
 
 object ObjectiveFunction {
-	def eval(pieces: Array[Piece]):Int = {
-		val dimension = math.sqrt(pieces.length).toInt;
+	def eval(puzzleSolution: PuzzleSolution):Int = {
 		var value = 0;
-		for (i <- 0 to (pieces.length - 1)){
-			if (i < pieces.length-1 && (pieces(i).right != pieces(i+1).left)){
-				value += 1;
-			}
-			if (i>dimension && (pieces(i).up != pieces(i-dimension).down)){
-				value += 1; 
+		for (i <- 0 to puzzleSolution.dimension - 1){
+			for (j <- 0 to puzzleSolution.dimension - 1){
+				if (j<puzzleSolution.dimension - 1 && puzzleSolution.piece(i,j).right != puzzleSolution.piece(i,j+1).left){
+					value += 1;
+				}
+				
+				if(i>0 && puzzleSolution.piece(i,j).up != puzzleSolution.piece(i-1,j).down){
+					value += 1;
+				}
 			}
 		}
 		

@@ -1,7 +1,7 @@
 package e2solver
 
 object BeeAlgorithm {
-	private def maxIteration = 100000000;
+	private def maxIteration = 10000;
 	private def maxIterationWithoutChange = 1000;
 	private def localSearchIteration = 100;
 	private def employed = 100;
@@ -14,7 +14,8 @@ object BeeAlgorithm {
 		var i = 0;
 		var j = 0;
 		var savedSolutions = List[PuzzleSolution]();
-		while (i < maxIteration || j < maxIterationWithoutChange) {
+		//while (i < maxIteration || j < maxIterationWithoutChange) {
+		while (i < maxIteration) {
 			//recluto las abejas onlookers
 			var onLookersSolutions = onLookerChoosingStrategy(initialSolutions, energyValueSolutions);
 		
@@ -46,8 +47,11 @@ object BeeAlgorithm {
 					onLookersSolutions(k) = maxLocalSolution;
 				}
 			}
+			//reemplazo las peores soluciones del inicial con las que generaron las onlookers
 			replaceWorstSolutions(initialSolutions, energyValueSolutions, onLookersSolutions);
+			i += 1;
 		}
+		//TODO: falta buscar entre las soluciones guardadas
 		initialSolutions(0);
 	}
 	
@@ -60,7 +64,7 @@ object BeeAlgorithm {
 	
 	private def localSearchStrategy(aSolution: PuzzleSolution): PuzzleSolution = {
 		var newSolution = aSolution.clone;
-		//TODO:cambiar piezas de la file/columna que tenga peor funcion parcial
+		//TODO:posible mejora cambiar piezas de la fila/columna que tenga peor funcion parcial
 		var rand = new scala.util.Random();
 		var dimension = aSolution.dimension;
 		
@@ -106,6 +110,7 @@ object BeeAlgorithm {
 	}
 	
 	private def scoutSearchSolution(aSolution: PuzzleSolution): PuzzleSolution = {
+		//TODO:posible mejora primero ubicar todas piezas que son esquina en las esquinas
 		var rand = new scala.util.Random();
 		var dimension = aSolution.dimension;
 		

@@ -13,7 +13,7 @@ object BeeAlgorithm {
 		var energyValueSolutions = evaluateAllEnergyValue(initialSolutions);
 		var i = 0;
 		var j = 0;
-		var savedSolutions = new List[puzzleSolution]();
+		var savedSolutions = List[PuzzleSolution]();
 		while (i < maxIteration || j < maxIterationWithoutChange) {
 			//recluto las abejas onlookers
 			var onLookersSolutions = onLookerChoosingStrategy(initialSolutions, energyValueSolutions);
@@ -23,7 +23,7 @@ object BeeAlgorithm {
 				var rand = new scala.util.Random();
 				var initialLocalEnergy = ObjectiveFunction.eval(onLookersSolutions(k));
 				var initialLocalSolution = onLookersSolutions(k);
-				var maxLocalEnergy = initialEnergy;
+				var maxLocalEnergy = initialLocalEnergy;
 				var maxLocalSolution = initialLocalSolution;
 				var tempSolution = onLookersSolutions(k);
 				for (l<-0 to localSearchIteration - 1) {
@@ -35,7 +35,7 @@ object BeeAlgorithm {
 					}
 					
 					if (tempEnergy < initialLocalEnergy && rand.nextInt(1) > 0.05) {
-						temp =  initialSolution;
+						tempSolution =  initialLocalSolution;
 					}						
 				}
 				if (maxLocalEnergy == initialLocalEnergy) {
@@ -51,22 +51,22 @@ object BeeAlgorithm {
 		initialSolutions(0);
 	}
 	
-	private def replaceWorstSolutions(oldSolutions: Array[PuzzleSolution], energyOldSolutions: Array[Int],
+	private def replaceWorstSolutions(oldSolutions: Array[PuzzleSolution], energyOldSolutions: Array[Double],
 			newSolutions: Array[PuzzleSolution]) = {
-		for (i<-0 to newSolutions) {
+		for (i<-0 to newSolutions.size - 1) {
 			//TODO
 		}
 	}
 	
 	private def localSearchStrategy(aSolution: PuzzleSolution): PuzzleSolution = {
-		newSolution = aSolution.clone;
+		var newSolution = aSolution.clone;
 		//TODO:cambiar piezas de la file/columna que tenga peor funcion parcial
 		var rand = new scala.util.Random();
-		var dimension = sSolution.dimension;
+		var dimension = aSolution.dimension;
 		
-		newSolution.swap(rand.nextInt(dimension), rand.nextInt(dimension), 
+		newSolution.swapPieces(rand.nextInt(dimension), rand.nextInt(dimension), 
 				rand.nextInt(dimension), rand.nextInt(dimension));
-		newSolution.swap(rand.nextInt(dimension), rand.nextInt(dimension), 
+		newSolution.swapPieces(rand.nextInt(dimension), rand.nextInt(dimension), 
 				rand.nextInt(dimension), rand.nextInt(dimension));
 		
 		newSolution.rotatePiece(rand.nextInt(dimension), rand.nextInt(dimension));
@@ -89,10 +89,10 @@ object BeeAlgorithm {
 		onLookersSolutions;
 	}
 	
-	private def evaluateAllEnergyValue(aSolution: PuzzleSolution): Array[Double] = {
-		var energyValue = new Array[Double](aSolution.size);
-		for (i<- 0 to aSolution.size - 1) {
-			energyValue(i) = ObjectiveFunction.eval(initialSolutions(i));
+	private def evaluateAllEnergyValue(aSolutions: Array[PuzzleSolution]): Array[Double] = {
+		var energyValue = new Array[Double](aSolutions.size);
+		for (i<- 0 to aSolutions.size - 1) {
+			energyValue(i) = ObjectiveFunction.eval(aSolutions(i));
 		}
 		energyValue;
 	}
@@ -105,13 +105,13 @@ object BeeAlgorithm {
 		solutions;
 	}
 	
-	private def scoutSearchSolution(aSolution: PuzzleSolution): PuzzleSolution {
+	private def scoutSearchSolution(aSolution: PuzzleSolution): PuzzleSolution = {
 		var rand = new scala.util.Random();
 		var dimension = aSolution.dimension;
 		
 		var newSolution = aSolution.clone;
 		
-		for(i <- 0 to dimension - 1) {
+		for (i <- 0 to dimension - 1) {
 			for(j <- 0 to dimension - 1) {
 				newSolution.swapPieces(i,j,rand.nextInt(dimension), rand.nextInt(dimension));
 				if (rand.nextInt(1) < 0.5) {

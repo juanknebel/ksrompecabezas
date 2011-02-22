@@ -15,7 +15,6 @@ object ObjectiveFunction {
 				}
 			}
 		}
-		
 		value;
 	}
 }

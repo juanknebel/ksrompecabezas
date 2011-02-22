@@ -17,6 +17,10 @@ class PuzzleSolution(var iPieces: Array[Piece]) {
 	  iPieces(piecePosition(x1,y1)) = iPieces(piecePosition(x2,y2))
 	  iPieces(piecePosition(x2,y2)) = temp
   }
+  
+  override def clone : PuzzleSolution = {
+	  new PuzzleSolution(pieces.clone);
+  }
 }
 
 object PuzzleSolutionCreater {

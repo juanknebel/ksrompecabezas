@@ -33,10 +33,10 @@ class Piece(var l: Char,var u: Char, var r: Char,var d: Char){
 	
 	private def emptyColor: Int = {
 		var count = 0;
-		if(up == 'E') count++;
-		if(down == 'E') count++;
-		if(right == 'E') count++;
-		if(left == 'E') count++;
+		if(up == 'E') count+=1;
+		if(down == 'E') count+=1;
+		if(right == 'E') count+=1;
+		if(left == 'E') count+=1;
 		count;
 	}
 }

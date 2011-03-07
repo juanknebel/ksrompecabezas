@@ -51,15 +51,59 @@ object BeeAlgorithm {
 			replaceWorstSolutions(initialSolutions, energyValueSolutions, onLookersSolutions);
 			i += 1;
 		}
-		//TODO: falta buscar entre las soluciones guardadas
-		initialSolutions(0);
+		
+		maxSolution(initialSolutions)
+		 
+	}
+	
+	private def maxSolution(solutions: Array[PuzzleSolution]):PuzzleSolution = {
+		var max = 0;
+		var energySolutions = evaluateAllEnergyValue(solutions);
+		for (i<-0 to solutions.size - 1) {
+			if (energySolutions(max)<energySolutions(i)){
+				max = i;		
+			}
+		}
+		
+		solutions(max);
 	}
 	
 	private def replaceWorstSolutions(oldSolutions: Array[PuzzleSolution], energyOldSolutions: Array[Double],
 			newSolutions: Array[PuzzleSolution]) = {
-		for (i<-0 to newSolutions.size - 1) {
-			//TODO
+		
+		var energyNewSolutions = evaluateAllEnergyValue(newSolutions);
+		
+		class SolutionEnergy(_solution: PuzzleSolution, _energy: Double){
+			def solution = _solution;
+			def energy = _energy;
 		}
+		
+		var newSolutionsEnergy = new Array[SolutionEnergy](newSolutions.size);
+		var oldSolutionsEnergy = new Array[SolutionEnergy](oldSolutions.size);
+		
+		for (i<-0 to newSolutions.size - 1) {
+			newSolutionsEnergy(i) = new SolutionEnergy(newSolutions(i),energyNewSolutions(i));
+		}
+		
+		for (i<-0 to oldSolutions.size - 1) {
+			oldSolutionsEnergy(i) = new SolutionEnergy(oldSolutions(i),energyOldSolutions(i));
+		}
+		
+		scala.util.Sorting.stableSort(newSolutionsEnergy, (s1:SolutionEnergy, s2:SolutionEnergy) => s1.energy>s2.energy);
+		scala.util.Sorting.stableSort(oldSolutionsEnergy, (s1:SolutionEnergy, s2:SolutionEnergy) => s1.energy>s2.energy);
+		
+		var oldPos = 0;
+		var newPos = 0;
+		for (i<-0 to oldSolutions.size - 1) {
+			if (newPos < newSolutionsEnergy.size && newSolutionsEnergy(newPos).energy>oldSolutionsEnergy(oldPos).energy){
+				oldSolutions(i) = newSolutionsEnergy(newPos).solution;
+				newPos = newPos+1;
+			}
+			else{
+				oldSolutions(i) = oldSolutionsEnergy(oldPos).solution;
+				oldPos = oldPos+1;
+			}		
+		}		
 	}
 	
 	private def localSearchStrategy(aSolution: PuzzleSolution): PuzzleSolution = {

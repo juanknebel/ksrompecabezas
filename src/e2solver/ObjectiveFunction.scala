@@ -61,7 +61,7 @@ object ObjectiveFunction {
 		var value = 0
 		if (piece.down == 'E') value = value + 1
 		if (piece.left == 'E') value = value + 1
-		if (piece.up == aPuzzle.piece(row-1, col).up) value = value + 1
+		if (piece.up == aPuzzle.piece(row-1, col).down) value = value + 1
 		if (piece.right == aPuzzle.piece(row, col+1).left) value = value + 1
 		value
 	}
@@ -71,7 +71,7 @@ object ObjectiveFunction {
 		var value = 0
 		if (piece.down == 'E') value = value + 1
 		if (piece.right == 'E') value = value + 1
-		if (piece.up == aPuzzle.piece(row-1, col).up) value = value + 1
+		if (piece.up == aPuzzle.piece(row-1, col).down) value = value + 1
 		if (piece.left == aPuzzle.piece(row, col-1).right) value = value + 1
 		value
 	}
@@ -91,7 +91,7 @@ object ObjectiveFunction {
 		var value = 0
 		if (piece.down == 'E') value = value + 1
 		if (piece.right == aPuzzle.piece(row, col+1).left) value = value + 1
-		if (piece.up == aPuzzle.piece(row+1, col).down) value = value + 1
+		if (piece.up == aPuzzle.piece(row-1, col).down) value = value + 1
 		if (piece.left == aPuzzle.piece(row, col-1).right) value = value + 1
 		value
 	}
@@ -101,18 +101,8 @@ object ObjectiveFunction {
 		var value = 0
 		if (piece.down == aPuzzle.piece(row+1, col).up) value = value + 1
 		if (piece.left == 'E') value = value + 1
-		if (piece.up == aPuzzle.piece(row-1, col).up) value = value + 1
+		if (piece.up == aPuzzle.piece(row-1, col).down) value = value + 1
 		if (piece.right == aPuzzle.piece(row, col+1).left) value = value + 1
-		value
-	}
-	
-	private def evaluateMiddle(row: Int, col: Int)(aPuzzle:PuzzleSolution): Int = {
-		var piece = aPuzzle.piece(row, col)
-		var value = 0
-		if (piece.down == aPuzzle.piece(row+1, col).up) value = value + 1
-		if (piece.right == 'E') value = value + 1
-		if (piece.up == aPuzzle.piece(row-1, col).up) value = value + 1
-		if (piece.left == aPuzzle.piece(row, col-1).right) value = value + 1
 		value
 	}
 	
@@ -120,8 +110,18 @@ object ObjectiveFunction {
 		var piece = aPuzzle.piece(row, col)
 		var value = 0
 		if (piece.down == aPuzzle.piece(row+1, col).up) value = value + 1
+		if (piece.right == 'E') value = value + 1
+		if (piece.up == aPuzzle.piece(row-1, col).down) value = value + 1
+		if (piece.left == aPuzzle.piece(row, col-1).right) value = value + 1
+		value
+	}
+	
+	private def evaluateMiddle(row: Int, col: Int)(aPuzzle:PuzzleSolution): Int = {
+		var piece = aPuzzle.piece(row, col)
+		var value = 0
+		if (piece.down == aPuzzle.piece(row+1, col).up) value = value + 1
 		if (piece.right == aPuzzle.piece(row, col+1).left) value = value + 1
-		if (piece.up == aPuzzle.piece(row-1, col).up) value = value + 1
+		if (piece.up == aPuzzle.piece(row-1, col).down) value = value + 1
 		if (piece.left == aPuzzle.piece(row, col-1).right) value = value + 1
 		value
 	}

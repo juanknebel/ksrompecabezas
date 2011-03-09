@@ -171,3 +171,25 @@ object BeeAlgorithm {
 		newSolution;
 	}
 }
+
+object TestBCOAlgorithm {
+	def main(args: Array[String]): Unit = {
+		testAlgoritmoTableroChico
+	}
+	
+	private def testAlgoritmoTableroChico: Unit = {
+		var pieces: Array[Piece] = Array(new Piece('E', 'E', 'B', 'G'), new Piece('B', 'E', 'E', 'R'), new Piece('E', 'G', 'Y', 'E'), new Piece('Y', 'R', 'E', 'E'))
+		val aPuzzle = PuzzleSolutionCreater.create(pieces)
+		aPuzzle.rotatePiece(0, 1)
+		aPuzzle.swapPieces(0, 0, 0, 1)
+		println("El tablero de entrada")
+		println(PieceSerializer.writer(aPuzzle.pieces))
+		println(ObjectiveFunction.eval(aPuzzle))
+
+		val thePuzzleSolution = BeeAlgorithm.run(aPuzzle)
+		
+		println("El tablero de salida")
+		println(PieceSerializer.writer(thePuzzleSolution.pieces))
+		println(ObjectiveFunction.eval(thePuzzleSolution))
+	}
+}

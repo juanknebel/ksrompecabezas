@@ -1,17 +1,6 @@
 package e2solver
 
 object ObjectiveFunction {
-	private def undefined = -1
-	private def upperSide = 1
-	private def lowerSide = 2
-	private def leftSide = 3
-	private def rightSide = 4
-	private def upperLeftCorner = 5
-	private def upperRightCorner = 6
-	private def lowerLeftCorner = 7
-	private def lowerRightCorner = 8
-	private def middle = 9
-	
 	def eval(aPuzzle: PuzzleSolution):Int = {
 		var value = 0;
 		var tamanio = aPuzzle.dimension

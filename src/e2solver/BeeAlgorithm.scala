@@ -3,9 +3,9 @@ package e2solver
 object BeeAlgorithm {
 	private def maxIteration = 10000;
 	private def maxIterationWithoutChange = 1000;
-	private def localSearchIteration = 100;
-	private def employed = 100;
-	private def onLooker = 15;
+	private def localSearchIteration = 10;
+	private def employed = 140;
+	private def onLooker = 70;
 	private def scout = 10; 
 	
 	def run (puzzleSolution: PuzzleSolution): PuzzleSolution = {
@@ -52,8 +52,17 @@ object BeeAlgorithm {
 			i += 1;
 		}
 		
-		maxSolution(initialSolutions)
-		 
+		compareSavedSolutionsWithMax(savedSolutions, maxSolution(initialSolutions))
+	}
+	
+	private def compareSavedSolutionsWithMax(theSolutions: List[PuzzleSolution], aSolution: PuzzleSolution): PuzzleSolution = {
+		theSolutions match {
+			case Nil => aSolution
+			case x::xs => if (ObjectiveFunction.eval(x) > ObjectiveFunction.eval(aSolution))
+							compareSavedSolutionsWithMax(xs, x)
+						  else
+						 	compareSavedSolutionsWithMax(xs, aSolution)  
+		}
 	}
 	
 	private def maxSolution(solutions: Array[PuzzleSolution]):PuzzleSolution = {
@@ -64,7 +73,6 @@ object BeeAlgorithm {
 				max = i;		
 			}
 		}
-		
 		solutions(max);
 	}
 	
@@ -130,9 +138,22 @@ object BeeAlgorithm {
 		for (i<-0 to employed - 1) {
 			fitnessValue(i) = rand.nextInt(1) * (1/energyValueSolutions(i));
 		}
-		//TODO:filtrar por el valor de la energia
+		
+		class SolutionEnergy(_solution: PuzzleSolution, _energy: Double){
+			def solution = _solution;
+			def energy = _energy;
+		}
+		
+		var newSolutionsEnergy = new Array[SolutionEnergy](employed);
+		
+		for (i<-0 to employed - 1) {
+			newSolutionsEnergy(i) = new SolutionEnergy(aSolutions(i),fitnessValue(i));
+		}
+		
+		scala.util.Sorting.stableSort(newSolutionsEnergy, (s1:SolutionEnergy, s2:SolutionEnergy) => s1.energy>s2.energy);
+		
 		for (j<-0 to onLooker - 1) {
-			onLookersSolutions(j) = aSolutions(j);
+			onLookersSolutions(j) = newSolutionsEnergy(j).solution;
 		}
 		onLookersSolutions;
 	}
@@ -163,7 +184,7 @@ object BeeAlgorithm {
 		for (i <- 0 to dimension - 1) {
 			for(j <- 0 to dimension - 1) {
 				newSolution.swapPieces(i,j,rand.nextInt(dimension), rand.nextInt(dimension));
-				if (rand.nextInt(1) < 0.5) {
+				if (rand.nextInt(1) < 0.8) {
 					newSolution.rotatePiece(rand.nextInt(dimension), rand.nextInt(dimension));
 				}
 			}
